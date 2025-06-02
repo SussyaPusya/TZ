@@ -63,9 +63,10 @@ func (r *Repository) GetQuotesFilterAuthor(author string) *[]domain.QuoteCell {
 
 	var result []domain.QuoteCell
 
-	for _, val := range r.Storage {
+	for id, val := range r.Storage {
 
 		if val.Author == author {
+			val.ID = id
 			result = append(result, val)
 		}
 
