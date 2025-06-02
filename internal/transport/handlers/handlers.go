@@ -12,12 +12,13 @@ import (
 )
 
 type Repository interface {
-	GetAllQuotes() []domain.QuoteCell
+	GetAllQuotes() *[]domain.QuoteCell
 
 	GetQuotesFilterAuthor(author string) *[]domain.QuoteCell
 
 	AddQuote(quote domain.QuoteCell) int
 	DeleteQoute(id int)
+	RandomQoute() *domain.QuoteCell
 }
 
 type Handleres struct {
@@ -118,4 +119,21 @@ func (h *Handleres) DeleteQoute(w http.ResponseWriter, r *http.Request) {
 	message := `{"message":"succesful"}`
 	w.Write([]byte(message))
 
+}
+
+func (h *Handleres) RandomQoute(w http.ResponseWriter, r *http.Request) {
+
+	quote := h.repo.RandomQoute()
+
+	respJs, err := json.Marshal(quote)
+	if err != nil {
+		log.Print("filed to marshal json", err)
+
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(respJs)
 }

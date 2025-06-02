@@ -19,6 +19,7 @@ func New(handlers *handlers.Handleres) *Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/quotes", handlers.GetQuotes).Methods("GET")
+	r.HandleFunc("/quotes/random", handlers.RandomQoute).Methods("GET")
 
 	r.HandleFunc("/quotes", handlers.AddQuote).Methods("POST")
 

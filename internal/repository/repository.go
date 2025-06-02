@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"math/rand"
 	"sync"
 
 	"github.com/SussyaPusya/TZ/internal/domain"
@@ -35,7 +36,7 @@ func (r *Repository) AddQuote(quote domain.QuoteCell) int {
 
 }
 
-func (r *Repository) GetAllQuotes() []domain.QuoteCell {
+func (r *Repository) GetAllQuotes() *[]domain.QuoteCell {
 
 	var res []domain.QuoteCell
 	for id, val := range r.Storage {
@@ -43,7 +44,7 @@ func (r *Repository) GetAllQuotes() []domain.QuoteCell {
 		res = append(res, val)
 	}
 
-	return res
+	return &res
 }
 
 func (r *Repository) DeleteQoute(id int) {
@@ -74,4 +75,18 @@ func (r *Repository) GetQuotesFilterAuthor(author string) *[]domain.QuoteCell {
 	}
 
 	return &result
+}
+
+func (r *Repository) RandomQoute() *domain.QuoteCell {
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	random := rand.Intn(len(r.Storage))
+
+	quote := r.Storage[random]
+
+	quote.ID = random
+
+	return &quote
 }

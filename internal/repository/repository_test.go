@@ -38,12 +38,12 @@ func TestGetAllQuotes(t *testing.T) {
 
 	all := repo.GetAllQuotes()
 
-	if len(all) != 2 {
-		t.Errorf("expected 2 quotes, got %d", len(all))
+	if len(*all) != 2 {
+		t.Errorf("expected 2 quotes, got %d", len(*all))
 	}
 
 	found := map[int]bool{id1: false, id2: false}
-	for _, q := range all {
+	for _, q := range *all {
 		found[q.ID] = true
 	}
 
@@ -83,4 +83,23 @@ func TestGetQuotesFilterAuthor(t *testing.T) {
 	if len(*result) != 2 {
 		t.Errorf("expected 2 quotes for AuthorX, got %d", len(*result))
 	}
+}
+
+func TestGetRandomQuotes(t *testing.T) {
+	repo := repository.New()
+
+	q1 := domain.QuoteCell{Quote: "Q1", Author: "AuthorX"}
+	q2 := domain.QuoteCell{Quote: "Q2", Author: "AuthorY"}
+	q3 := domain.QuoteCell{Quote: "Q3", Author: "AuthorX"}
+
+	repo.AddQuote(q1)
+	repo.AddQuote(q2)
+	repo.AddQuote(q3)
+
+	result := repo.RandomQoute()
+
+	if result == nil {
+		t.Error("nil struct")
+	}
+
 }
